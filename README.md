@@ -39,6 +39,7 @@ You are required to implement the following backend functionalities:
 ### General Requirements
 
 - Implement the web UI using **TypeScript**, **React**, **React Query**, and **Tailwind CSS**.
+- Follow the **Tailwind** and **shadcn/ui** design tokens (defined in Figma) for consistent styling.
 - Follow the **Figma design** provided in the Resources section.
 - Ensure **graceful handling of API errors** or unexpected data from the backend.
 - Components and pages should have **error and loading states**.
