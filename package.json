@@ -4,7 +4,7 @@
   "license": "MIT",
   "engines": {
     "node": "18.x",
-    "pnpm": "8.x"
+    "pnpm": "10.x"
   },
   "scripts": {
     "backend:dev": "nx dev backend",
