@@ -37,6 +37,9 @@ jobs:
       - name: Build backend
         run: pnpm backend:build
 
+      - name: Install Heroku CLI
+        run: curl https://cli-assets.heroku.com/install.sh | sh
+
       - name: Prepare deployment directory
         run: |
           mkdir -p deploy-backend
