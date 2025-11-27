@@ -37,6 +37,8 @@ jobs:
 
       - name: Build frontend
         run: pnpm frontend:build
+        env:
+          VITE_API_URL: ${{ secrets.HEROKU_BACKEND_URL }}
 
       - name: Install Heroku CLI
         run: curl https://cli-assets.heroku.com/install.sh | sh
