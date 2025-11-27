@@ -21,6 +21,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Health check endpoint
+app.get("/", (req, res) => {
+  res.json({ status: "ok", message: "API is running" });
+});
+
 app.use("/posts", postsRouter);
 app.use("/users", usersRouter);
 
