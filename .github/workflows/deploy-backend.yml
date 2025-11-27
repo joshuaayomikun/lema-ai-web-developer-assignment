@@ -43,9 +43,14 @@ jobs:
       - name: Prepare deployment directory
         run: |
           mkdir -p deploy-backend
-          cp -r dist/apps/backend/* deploy-backend/
+          # Copy the compiled JS files from src subfolder
+          cp -r dist/apps/backend/src/* deploy-backend/
           cp -r apps/backend/config deploy-backend/
           cp apps/backend/data.db deploy-backend/ 2>/dev/null || echo "No data.db to copy"
+          
+          # Debug: List what's in the deploy directory
+          echo "Contents of deploy-backend:"
+          ls -la deploy-backend/
           
           # Create package.json for Heroku
           cat > deploy-backend/package.json << 'EOF'
