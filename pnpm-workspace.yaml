@@ -1,0 +1,8 @@
+packages: []
+
+ignoredBuiltDependencies:
+  - '@swc/core'
+  - esbuild
+  - nx
+  - sqlite3
+  - unrs-resolver

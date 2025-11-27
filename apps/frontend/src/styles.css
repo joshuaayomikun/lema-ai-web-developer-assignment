@@ -1,0 +1,57 @@
+@import "tailwindcss";
+
+@source "../../../libs/ui/src/**/*.tsx";
+
+@theme {
+  --font-family-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Custom colors */
+  --color-text-primary: #181D27;
+  
+  /* Custom spacing */
+  --spacing-card-gap: 23px;
+  
+  /* Custom sizes */
+  --width-card: 270px;
+  --height-card: 293px;
+  --width-table-column: 392px;
+  
+  /* Custom shadows */
+  --shadow-card: 0px 2px 4px -1px #0000000F, 0px 4px 6px -1px #0000001A;
+  
+  /* Animations */
+  --animate-lds-ellipsis1: lds-ellipsis1 0.6s infinite;
+  --animate-lds-ellipsis2: lds-ellipsis2 0.6s infinite;
+  --animate-lds-ellipsis3: lds-ellipsis3 0.6s infinite;
+}
+
+@keyframes lds-ellipsis1 {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes lds-ellipsis2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(24px, 0);
+  }
+}
+
+@keyframes lds-ellipsis3 {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+body {
+  font-family: var(--font-family-sans);
+}
