@@ -37,8 +37,35 @@ jobs:
       - name: Build backend
         run: pnpm backend:build
 
-      - name: Install Heroku CLI
-        run: curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p deploy-backend
+          cp -r dist/apps/backend/* deploy-backend/
+          cp -r apps/backend/config deploy-backend/
+          cp apps/backend/data.db deploy-backend/ 2>/dev/null || echo "No data.db to copy"
+          
+          # Create package.json for Heroku
+          cat > deploy-backend/package.json << 'EOF'
+          {
+            "name": "backend",
+            "version": "1.0.0",
+            "main": "index.js",
+            "engines": {
+              "node": "18.x"
+            },
+            "scripts": {
+              "start": "node index.js"
+            },
+            "dependencies": {
+              "config": "^3.3.12",
+              "express": "^4.21.1",
+              "sqlite3": "5.1.7"
+            }
+          }
+          EOF
+          
+          # Create Procfile
+          echo "web: node index.js" > deploy-backend/Procfile
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
@@ -46,6 +73,4 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_BACKEND_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: "."
-          buildpack: "heroku/nodejs"
-          procfile: "web: node dist/apps/backend/index.js"
+          appdir: deploy-backend

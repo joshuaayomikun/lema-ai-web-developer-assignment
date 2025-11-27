@@ -9,7 +9,7 @@ on:
       - 'libs/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-backend.yml'
+      - '.github/workflows/deploy-frontend.yml'
   workflow_dispatch:
 
 jobs:
@@ -38,8 +38,40 @@ jobs:
       - name: Build frontend
         run: pnpm frontend:build
 
-      - name: Install Heroku CLI
-        run: curl https://cli-assets.heroku.com/install.sh | sh
+      - name: Prepare deployment directory
+        run: |
+          mkdir -p deploy-frontend
+          cp -r dist/apps/frontend/* deploy-frontend/
+          
+          # Create package.json for Heroku static site
+          cat > deploy-frontend/package.json << 'EOF'
+          {
+            "name": "frontend",
+            "version": "1.0.0",
+            "engines": {
+              "node": "18.x"
+            },
+            "scripts": {
+              "start": "npx serve -s . -l $PORT"
+            },
+            "dependencies": {
+              "serve": "^14.2.1"
+            }
+          }
+          EOF
+          
+          # Create Procfile
+          echo "web: npx serve -s . -l \$PORT" > deploy-frontend/Procfile
+          
+          # Create static.json for SPA routing (optional but helpful)
+          cat > deploy-frontend/static.json << 'EOF'
+          {
+            "root": "./",
+            "routes": {
+              "/**": "index.html"
+            }
+          }
+          EOF
 
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
@@ -47,6 +79,4 @@ jobs:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_FRONTEND_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: "."
-          buildpack: "heroku/nodejs"
-          procfile: "web: npx serve dist/apps/frontend -s -l $PORT"
+          appdir: deploy-frontend
