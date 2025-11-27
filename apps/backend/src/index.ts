@@ -2,7 +2,9 @@ import express, { Application } from "express";
 import config from "config";
 import postsRouter from "./routes/posts";
 import usersRouter from "./routes/users";
-const port = config.get("port") as number;
+
+// Use PORT from environment (for Heroku) or fall back to config
+const port = process.env.PORT || (config.get("port") as number);
 
 const app: Application = express();
 
