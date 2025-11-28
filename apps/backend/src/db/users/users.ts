@@ -27,9 +27,9 @@ export const getUsersCount = (): Promise<number> =>
       selectCountOfUsersTemplate,
       (error, results) => {
         if (error) {
-          reject(error);
+          return reject(error);
         }
-        resolve(results.count);
+        resolve(results?.count || 0);
       }
     );
   });
@@ -41,7 +41,7 @@ export const getUserById = (id: string): Promise<UserWithDetails | undefined> =>
       [id],
       (error, result) => {
         if (error) {
-          reject(error);
+          return reject(error);
         }
         resolve(result ? mapRowToUser(result) : undefined);
       }
@@ -58,9 +58,10 @@ export const getUsers = (
       [pageNumber * pageSize, pageSize],
       (error, results) => {
         if (error) {
-          reject(error);
+          return reject(error);
         }
-        resolve(results.map(mapRowToUser));
+        const validResults = (results || []).filter((row) => row !== null);
+        resolve(validResults.map(mapRowToUser));
       }
     );
   });

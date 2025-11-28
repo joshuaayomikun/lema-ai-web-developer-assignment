@@ -5,8 +5,8 @@ WHERE user_id = ?
 `;
 
 export const insertPostTemplate = `
-INSERT INTO posts (title, body, user_id, created_at)
-VALUES (?, ?, ?, datetime('now'))
+INSERT INTO posts (id, title, body, user_id, created_at)
+VALUES (?, ?, ?, ?, datetime('now'))
 `;
 
 export const deletePostTemplate = `
