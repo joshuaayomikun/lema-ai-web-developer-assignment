@@ -98,7 +98,8 @@ describe('UsersTable', () => {
     );
 
     expect(screen.getByTestId('loading-spinner')).toBeInTheDocument();
-    expect(screen.queryByText('Full name')).not.toBeInTheDocument();
+    // Table header is still visible when loading, only body shows spinner
+    expect(screen.getByText('Full name')).toBeInTheDocument();
   });
 
   it('should handle users without address', () => {

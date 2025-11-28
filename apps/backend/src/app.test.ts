@@ -1,5 +1,30 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import request from 'supertest';
+
+// Mock sqlite3 before any imports that use it
+vi.mock('sqlite3', () => ({
+  default: {
+    Database: vi.fn(() => ({
+      get: vi.fn(),
+      all: vi.fn(),
+      run: vi.fn(),
+    })),
+  },
+}));
+
+// Mock the database functions to prevent sqlite3 loading
+vi.mock('./db/users/users', () => ({
+  getUsers: vi.fn(),
+  getUsersCount: vi.fn(),
+  getUserById: vi.fn(),
+}));
+
+vi.mock('./db/posts/posts', () => ({
+  getPosts: vi.fn(),
+  createPost: vi.fn(),
+  deletePost: vi.fn(),
+}));
+
 import { createApp } from './app';
 
 const app = createApp();
