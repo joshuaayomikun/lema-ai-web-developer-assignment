@@ -36,6 +36,13 @@
         "command": "pnpm exec nodemon --config apps/backend/nodemon.json",
         "cwd": "{workspaceRoot}"
       }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vitest run --config apps/backend/vitest.config.ts",
+        "cwd": "{workspaceRoot}"
+      }
     }
   }
 }

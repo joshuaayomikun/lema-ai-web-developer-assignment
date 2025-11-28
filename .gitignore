@@ -4,6 +4,9 @@ node_modules
 # compiled
 dist
 
+# coverage
+coverage
+
 # environment files
 .env
 .env.local

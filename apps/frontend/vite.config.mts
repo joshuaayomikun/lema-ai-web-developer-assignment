@@ -39,6 +39,9 @@ export default defineConfig(() => ({
     coverage: {
       reportsDirectory: '../../coverage/apps/frontend',
       provider: 'v8' as const,
+      reporter: ['text', 'json', 'json-summary', 'html'],
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: ['src/**/*.test.{ts,tsx}', 'src/**/*.d.ts', 'src/main.tsx'],
     },
   },
 }));

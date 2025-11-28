@@ -1,20 +1,19 @@
 name: Deploy Frontend to Heroku
 
 on:
-  push:
+  workflow_run:
+    workflows: ["CI - Test Affected"]
+    types:
+      - completed
     branches:
       - main
-    paths:
-      - 'apps/frontend/**'
-      - 'libs/**'
-      - 'package.json'
-      - 'pnpm-lock.yaml'
-      - '.github/workflows/deploy-frontend.yml'
   workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # Only run if CI passed and frontend/libs files changed
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     
     steps:
       - name: Checkout code
@@ -22,28 +21,49 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Check if frontend changed
+        id: changes
+        run: |
+          # For workflow_dispatch, always deploy
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          # Check if frontend or libs files changed in the last commit
+          if git diff --name-only HEAD~1 HEAD | grep -qE "^(apps/frontend/|libs/)"; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Setup Node.js
+        if: steps.changes.outputs.changed == 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '18'
 
       - name: Install pnpm
+        if: steps.changes.outputs.changed == 'true'
         uses: pnpm/action-setup@v4
         with:
           version: 10
 
       - name: Install dependencies
+        if: steps.changes.outputs.changed == 'true'
         run: pnpm install
 
       - name: Build frontend
+        if: steps.changes.outputs.changed == 'true'
         run: pnpm frontend:build
         env:
           VITE_API_URL: ${{ secrets.HEROKU_BACKEND_URL }}
 
       - name: Install Heroku CLI
+        if: steps.changes.outputs.changed == 'true'
         run: curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Prepare deployment directory
+        if: steps.changes.outputs.changed == 'true'
         run: |
           mkdir -p deploy-frontend
           cp -r dist/apps/frontend/* deploy-frontend/
@@ -79,9 +99,14 @@ jobs:
           EOF
 
       - name: Deploy to Heroku
+        if: steps.changes.outputs.changed == 'true'
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_FRONTEND_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
           appdir: deploy-frontend
+
+      - name: Skip deployment
+        if: steps.changes.outputs.changed == 'false'
+        run: echo "No frontend changes detected, skipping deployment"

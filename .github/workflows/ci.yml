@@ -1,0 +1,91 @@
+name: CI - Test Affected
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run affected tests with coverage
+        run: npx nx affected --target=test --base=origin/main~1 --head=HEAD --coverage
+
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 30
+
+      - name: Generate coverage summary
+        if: always()
+        run: |
+          echo "## 📊 Code Coverage Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          # Check for frontend coverage
+          if [ -f "coverage/apps/frontend/coverage-summary.json" ]; then
+            echo "### Frontend Coverage" >> $GITHUB_STEP_SUMMARY
+            node -e "
+              const coverage = require('./coverage/apps/frontend/coverage-summary.json');
+              const total = coverage.total;
+              console.log('| Metric | Coverage |');
+              console.log('|--------|----------|');
+              console.log('| Lines | ' + total.lines.pct + '% |');
+              console.log('| Statements | ' + total.statements.pct + '% |');
+              console.log('| Functions | ' + total.functions.pct + '% |');
+              console.log('| Branches | ' + total.branches.pct + '% |');
+            " >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # Check for backend coverage
+          if [ -f "coverage/apps/backend/coverage-summary.json" ]; then
+            echo "### Backend Coverage" >> $GITHUB_STEP_SUMMARY
+            node -e "
+              const coverage = require('./coverage/apps/backend/coverage-summary.json');
+              const total = coverage.total;
+              console.log('| Metric | Coverage |');
+              console.log('|--------|----------|');
+              console.log('| Lines | ' + total.lines.pct + '% |');
+              console.log('| Statements | ' + total.statements.pct + '% |');
+              console.log('| Functions | ' + total.functions.pct + '% |');
+              console.log('| Branches | ' + total.branches.pct + '% |');
+            " >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          # If no coverage files found
+          if [ ! -f "coverage/apps/frontend/coverage-summary.json" ] && [ ! -f "coverage/apps/backend/coverage-summary.json" ]; then
+            echo "No coverage reports generated (no affected tests or coverage not configured)" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Run affected lint (optional)
+        run: npx nx affected --target=lint --base=origin/main~1 --head=HEAD
+        continue-on-error: true
