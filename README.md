@@ -2,6 +2,11 @@
 
 A full-stack user management system with a Node.js/SQLite backend and React/TypeScript frontend. Users are displayed in a paginated table, and clicking on a user shows their posts with the ability to create and delete posts.
 
+## 🌐 Live Demo
+
+- **Frontend**: https://lema-ai-frontend-coding-test-60f713aaccb2.herokuapp.com/
+- **Backend API**: https://lema-ai-backend-coding-test-cee986ff7bb8.herokuapp.com/
+
 ## 🚀 Quick Start
 
 ### Prerequisites
