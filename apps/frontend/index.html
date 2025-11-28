@@ -6,6 +6,26 @@
     <base href="/" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- Security: Content Security Policy -->
+    <meta http-equiv="Content-Security-Policy" content="
+      default-src 'self';
+      script-src 'self' 'unsafe-inline';
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data: https:;
+      connect-src 'self' https://lema-ai-backend-coding-test-a95b0e885bf1.herokuapp.com http://localhost:3001;
+    " />
+    
+    <!-- Security: Prevent clickjacking -->
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    
+    <!-- Security: Prevent MIME type sniffing -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    
+    <!-- Security: Referrer policy -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

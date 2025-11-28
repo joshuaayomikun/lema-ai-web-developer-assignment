@@ -51,6 +51,16 @@ describe('App', () => {
     });
   });
 
+  describe('Security headers', () => {
+    it('should include Helmet security headers', async () => {
+      const response = await request(app).get('/');
+
+      // Helmet sets various security headers
+      expect(response.headers['x-content-type-options']).toBe('nosniff');
+      expect(response.headers['x-frame-options']).toBe('SAMEORIGIN');
+    });
+  });
+
   describe('404 handling', () => {
     it('should return 404 for unknown routes', async () => {
       const response = await request(app).get('/unknown-route');

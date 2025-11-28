@@ -1,7 +1,146 @@
 # Web Developer Assignment
 
-This full-stack assignment involves building a user management system where developers must extend a Node.js/SQLite backend for user and post operations, and create a React/TypeScript frontend that displays user data in a paginated table and allows for post management, all while following provided design specifications.
+A full-stack user management system with a Node.js/SQLite backend and React/TypeScript frontend. Users are displayed in a paginated table, and clicking on a user shows their posts with the ability to create and delete posts.
 
+## 🚀 Quick Start
+
+### Prerequisites
+
+- **Node.js** 18.x
+- **pnpm** 10.x
+
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/joshuaayomikun/lema-ai-web-developer-assignment.git
+cd lema-ai-web-developer-assignment
+
+# Install dependencies
+pnpm install
+```
+
+### Database Setup
+
+The SQLite database (`data.db`) is pre-configured and included in the repository. No migrations are required.
+
+### Running the Application
+
+**Option 1: Run both servers concurrently**
+```bash
+pnpm dev
+```
+
+**Option 2: Run servers separately**
+
+In one terminal (Backend - http://localhost:3001):
+```bash
+pnpm backend:dev
+```
+
+In another terminal (Frontend - http://localhost:4200):
+```bash
+pnpm frontend:dev
+```
+
+### Running Tests
+
+```bash
+# Run all tests
+pnpm test
+
+# Run backend tests only
+pnpm backend:test
+
+# Run frontend tests only
+pnpm frontend:test
+```
+
+## 📁 Project Structure
+
+This project uses an **Nx monorepo** with a feature-based "screaming architecture":
+
+```
+├── apps/
+│   ├── backend/          # Express.js API server
+│   │   └── src/
+│   │       ├── db/       # Database queries and types
+│   │       └── routes/   # API route handlers
+│   └── frontend/         # React application
+│       └── src/
+│           ├── features/ # Feature modules (users, posts)
+│           └── app/      # App shell and routing
+├── libs/
+│   ├── ui/              # Shared React UI components
+│   └── shared/          # Shared utilities
+└── config/              # Backend configuration
+```
+
+## 🔌 API Endpoints
+
+### Users
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/users?pageNumber=0&pageSize=4` | Get paginated users with address |
+| GET | `/users/count` | Get total user count |
+| GET | `/users/:id` | Get user by ID |
+
+### Posts
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/posts?userId={id}` | Get posts for a user |
+| POST | `/posts` | Create a new post |
+| DELETE | `/posts/:id` | Delete a post |
+
+## ✅ Implemented Features
+
+### Backend
+- ✅ User endpoints with address data (JOIN query)
+- ✅ Post creation endpoint with validation
+- ✅ Post deletion endpoint
+- ✅ Health check endpoint
+- ✅ CORS configuration
+- ✅ Unit tests (19 tests)
+
+### Frontend
+- ✅ Users table with pagination (4 per page)
+- ✅ Address formatting with ellipsis overflow
+- ✅ User posts page with create/delete functionality
+- ✅ New post modal with form validation
+- ✅ Loading and error states
+- ✅ React Query for data fetching/caching
+- ✅ TailwindCSS v4 styling
+- ✅ Unit tests (14 tests)
+
+## 🛠️ Development Notes
+
+### Adding Backend Dependencies
+
+When adding new npm packages to the backend, you must also update the Heroku deployment workflow. The deployment creates its own `package.json` with explicit dependencies.
+
+**Steps:**
+1. Add the package normally: `pnpm add <package-name>`
+2. Update `.github/workflows/deploy-backend.yml` - find the `package.json` section and add your new dependency there
+
+### Security Features
+
+The application includes the following security measures:
+
+**Backend:**
+- Helmet.js for secure HTTP headers
+- Rate limiting (100 requests per 15 min per IP)
+- Request body size limit (10kb)
+- Environment-based CORS (production restricts to frontend domain)
+
+**Frontend:**
+- Content Security Policy (CSP)
+- X-Frame-Options (clickjacking protection)
+- X-Content-Type-Options (MIME sniffing prevention)
+- Strict referrer policy
+
+---
+
+## Original Assignment Requirements
 
 ## Backend
 

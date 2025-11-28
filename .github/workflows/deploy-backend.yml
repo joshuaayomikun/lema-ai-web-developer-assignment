@@ -74,6 +74,8 @@ jobs:
           ls -la deploy-backend/
           
           # Create package.json for Heroku
+          # IMPORTANT: When adding new npm packages to the backend, 
+          # make sure to add them here as well for Heroku deployment!
           cat > deploy-backend/package.json << 'EOF'
           {
             "name": "backend",
@@ -83,11 +85,13 @@ jobs:
               "node": "18.x"
             },
             "scripts": {
-              "start": "node index.js"
+              "start": "NODE_ENV=production node index.js"
             },
             "dependencies": {
               "config": "^3.3.12",
               "express": "^4.21.1",
+              "express-rate-limit": "^8.2.1",
+              "helmet": "^8.1.0",
               "sqlite3": "5.1.7",
               "tslib": "^2.3.0"
             }
