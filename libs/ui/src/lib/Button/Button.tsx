@@ -4,19 +4,19 @@ import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 const buttonVariants = cva(
   // Base styles
-  'inline-flex items-center justify-center font-medium transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50',
+  'inline-flex items-center justify-center font-medium transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 border border-transparent',
   {
     variants: {
       variant: {
         primary:
-          'bg-blue-600 text-white hover:bg-blue-700 disabled:hover:bg-blue-600',
+          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 disabled:hover:bg-blue-600',
         secondary:
-          'bg-white text-slate-950 border border-slate-200 hover:bg-gray-50 disabled:hover:bg-white',
+          'bg-white text-slate-950 border-slate-200 hover:bg-gray-50 active:bg-gray-100 disabled:hover:bg-white',
         danger:
-          'bg-red-600 text-white hover:bg-red-700 disabled:hover:bg-red-600',
+          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 disabled:hover:bg-red-600',
         ghost:
-          'bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100',
-        link: 'bg-transparent text-blue-600 hover:text-blue-700 hover:underline p-0',
+          'bg-transparent text-gray-600 hover:text-gray-900 hover:bg-gray-100 active:bg-gray-200',
+        link: 'bg-transparent text-blue-600 hover:text-blue-700 active:text-blue-800 hover:underline p-0 border-0',
       },
       size: {
         sm: 'px-4 py-2 text-xs rounded-md',

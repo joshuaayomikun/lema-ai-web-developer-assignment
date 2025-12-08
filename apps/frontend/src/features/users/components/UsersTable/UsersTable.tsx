@@ -43,7 +43,7 @@ export function UsersTable({ users, onUserClick, isLoading }: UsersTableProps) {
               <tr
                 key={user.id}
                 onClick={() => onUserClick(user)}
-                className="border-b border-gray-100 cursor-pointer hover:bg-gray-50 transition-colors animate-fade-in"
+                className="border-b border-gray-100 cursor-pointer hover:bg-gray-50 active:bg-gray-100 transition-all animate-fade-in"
               >
                 <td className="py-4 px-4 text-sm text-gray-900 whitespace-nowrap">{user.name}</td>
                 <td className="py-4 px-4 text-sm text-gray-900 whitespace-nowrap">{user.email}</td>

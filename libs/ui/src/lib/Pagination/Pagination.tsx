@@ -1,3 +1,5 @@
+import { Button } from '../Button/Button';
+
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
@@ -52,18 +54,20 @@ export function Pagination({
 
   return (
     <div className="flex items-center justify-center gap-1 sm:gap-2 mt-8 flex-wrap">
-      <button
+      <Button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="flex items-center gap-1 px-2 sm:px-3 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        variant="ghost"
+        size="sm"
+        className="gap-1"
       >
         <ChevronLeftIcon />
         <span className="hidden sm:inline">Previous</span>
-      </button>
+      </Button>
 
       <div className="flex items-center gap-1">
         {pageNumbers.map((page, index) => {
-          if (page === '...') {
+          if (typeof page === 'string') {
             return (
               <span key={`ellipsis-${index}`} className="px-2 sm:px-3 py-2 text-sm text-gray-500">
                 ...
@@ -71,33 +75,33 @@ export function Pagination({
             );
           }
 
-          const pageNum = page as number;
+          const pageNum = page
           const isActive = pageNum === currentPage;
 
           return (
-            <button
+            <Button
               key={pageNum}
               onClick={() => onPageChange(pageNum)}
-              className={`px-2 sm:px-3 py-2 text-sm rounded min-w-8 sm:min-w-9 cursor-pointer transition-colors ${
-                isActive
-                  ? 'border border-gray-300 text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
-              }`}
+              variant={isActive ? 'secondary' : 'ghost'}
+              size="sm"
+              className="min-w-8 sm:min-w-9"
             >
               {pageNum}
-            </button>
+            </Button>
           );
         })}
       </div>
 
-      <button
+      <Button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="flex items-center gap-1 px-2 sm:px-3 py-2 text-sm text-gray-600 hover:text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        variant="ghost"
+        size="sm"
+        className="gap-1"
       >
         <span className="hidden sm:inline">Next</span>
         <ChevronRightIcon />
-      </button>
+      </Button>
     </div>
   );
 }

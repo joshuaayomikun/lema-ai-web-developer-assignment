@@ -63,23 +63,50 @@ pnpm frontend:test
 
 ## 📁 Project Structure
 
-This project uses an **Nx monorepo** with a feature-based "screaming architecture":
+This project uses an **Nx monorepo** with pnpm for package management, structured with feature-based architecture:
 
 ```
+web-developer-assignment/
 ├── apps/
-│   ├── backend/          # Express.js API server
-│   │   └── src/
-│   │       ├── db/       # Database queries and types
-│   │       └── routes/   # API route handlers
-│   └── frontend/         # React application
-│       └── src/
-│           ├── features/ # Feature modules (users, posts)
-│           └── app/      # App shell and routing
+│   ├── backend/              # Express.js API server
+│   │   ├── src/
+│   │   │   ├── db/           # Database queries and types
+│   │   │   └── routes/       # API route handlers
+│   │   ├── config/           # Configuration files
+│   │   ├── project.json      # Nx project configuration
+│   │   └── tsconfig.json
+│   │
+│   └── frontend/             # React application
+│       ├── src/
+│       │   ├── features/     # Feature modules (users, posts)
+│       │   ├── app/          # App shell and routing
+│       │   └── lib/          # API client
+│       ├── project.json      # Nx project configuration
+│       ├── vite.config.mts   # Vite configuration
+│       └── tsconfig.json
+│
 ├── libs/
-│   ├── ui/              # Shared React UI components
-│   └── shared/          # Shared utilities
-└── config/              # Backend configuration
+│   ├── ui/                   # Shared React UI components
+│   │   ├── src/lib/          # Button, Modal, etc.
+│   │   └── project.json
+│   └── shared/               # Shared utilities
+│
+├── dist/                     # Build outputs
+├── .nx/                      # Nx cache
+├── nx.json                   # Nx workspace configuration
+├── tsconfig.base.json        # Shared TypeScript config
+├── pnpm-workspace.yaml       # pnpm workspace definition
+└── package.json              # Root workspace scripts
 ```
+
+### Why Nx Monorepo?
+
+**Benefits:**
+- **Smart Caching**: Nx only rebuilds what changed, dramatically speeding up builds
+- **Code Sharing**: Share components (`libs/ui`) across projects without publishing packages
+- **Parallel Execution**: Run tasks across multiple projects simultaneously
+- **Dependency Graph**: Visualize relationships between projects with `pnpm exec nx graph`
+- **Affected Commands**: Only test/build projects affected by your changes
 
 ## 🔌 API Endpoints
 
@@ -118,6 +145,61 @@ This project uses an **Nx monorepo** with a feature-based "screaming architectur
 - ✅ Unit tests (14 tests)
 
 ## 🛠️ Development Notes
+
+### Technology Stack
+
+**Backend:**
+- Node.js 18.x with TypeScript
+- Express.js for API server
+- SQLite3 for database
+- Vitest for testing
+
+**Frontend:**
+- React 19 with TypeScript
+- Vite 5.x for bundling
+- React Router for navigation
+- React Query (@tanstack/react-query) for data fetching
+- TailwindCSS v4 for styling
+- Vitest + Testing Library for testing
+
+**Tooling:**
+- Nx 22.1.2 for monorepo management
+- pnpm 10.x for package management
+- Prettier for code formatting
+
+### Available Commands
+
+```bash
+# Development
+pnpm dev                  # Run both apps concurrently
+pnpm backend:dev          # Run backend only
+pnpm frontend:dev         # Run frontend only
+
+# Build
+pnpm build                # Build both apps
+pnpm backend:build        # Build backend only
+pnpm frontend:build       # Build frontend only
+
+# Testing
+pnpm test                 # Run all tests
+pnpm backend:test         # Run backend tests only
+pnpm frontend:test        # Run frontend tests only
+
+# Nx-specific commands
+pnpm exec nx graph                    # Visualize project dependencies
+pnpm exec nx show projects            # List all projects
+pnpm exec nx reset                    # Clear Nx cache
+pnpm exec nx affected:test            # Test only affected projects
+```
+
+### Package Management with pnpm
+
+This project uses **pnpm** with a hoisted node_modules structure (configured in `.npmrc`):
+- `node-linker=hoisted` - Creates a flat structure for Nx compatibility
+- `shamefully-hoist=true` - Makes all packages accessible across the monorepo
+- `ignore-scripts=false` - Allows lifecycle scripts to run
+
+These settings ensure Nx and its plugins work correctly while maintaining the benefits of pnpm's fast, disk-efficient installations.
 
 ### Adding Backend Dependencies
 
