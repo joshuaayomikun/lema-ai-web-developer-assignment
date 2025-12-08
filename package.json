@@ -68,14 +68,18 @@
   "dependencies": {
     "@tanstack/react-query": "^5.90.11",
     "@tanstack/react-query-devtools": "^5.91.1",
+    "class-variance-authority": "^0.7.1",
     "config": "^3.3.12",
     "express": "^4.21.1",
     "express-rate-limit": "^8.2.1",
     "helmet": "^8.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hook-form": "^7.68.0",
+    "react-hot-toast": "^2.6.0",
     "react-router-dom": "6.29.0",
     "serve": "^14.2.1",
-    "sqlite3": "5.1.7"
+    "sqlite3": "5.1.7",
+    "tailwind-merge": "^3.4.0"
   }
 }

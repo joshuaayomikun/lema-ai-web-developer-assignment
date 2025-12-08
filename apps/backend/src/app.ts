@@ -1,8 +1,7 @@
 import express, { Application } from "express";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
-import postsRouter from "./routes/posts";
-import usersRouter from "./routes/users";
+import routes from "./routes";
 
 export const createApp = (): Application => {
   const app: Application = express();
@@ -43,8 +42,13 @@ export const createApp = (): Application => {
     res.json({ status: "ok", message: "API is running" });
   });
 
-  app.use("/posts", postsRouter);
-  app.use("/users", usersRouter);
+  // Mount all routes
+  app.use(routes);
+
+  // 404 handler for unknown routes
+  app.use((req, res) => {
+    res.status(404).json({ error: "Route not found" });
+  });
 
   return app;
 };

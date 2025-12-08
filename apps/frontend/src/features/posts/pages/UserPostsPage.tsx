@@ -1,9 +1,13 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useUser } from '../../users/hooks';
 import { useUserPosts, useCreatePost, useDeletePost } from '../hooks';
-import { Breadcrumb, LoadingSpinner } from '@web-developer-assignment/ui';
-import { PostCard, NewPostCard, NewPostModal } from '../components';
+import toast from 'react-hot-toast';
+import { Breadcrumb, LoadingSpinner, DeleteConfirmModal, Modal } from '@web-developer-assignment/ui';
+import { PostCard, NewPostCard } from '../components';
+
+// Lazy load the PostForm
+const PostForm = lazy(() => import('../components/PostForm/PostForm').then(m => ({ default: m.PostForm })));
 
 export function UserPostsPage() {
   const { userId } = useParams<{ userId: string }>();
@@ -13,6 +17,10 @@ export function UserPostsPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showFloatingButton, setShowFloatingButton] = useState(false);
+  const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; postId: string | null }>({
+    isOpen: false,
+    postId: null,
+  });
   const newPostCardRef = useRef<HTMLDivElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -49,15 +57,29 @@ export function UserPostsPage() {
       {
         onSuccess: () => {
           setIsModalOpen(false);
+          toast.success('Post published successfully');
         },
       }
     );
   };
 
   const handleDeletePost = (postId: string) => {
-    if (window.confirm('Are you sure you want to delete this post?')) {
-      deletePost.mutate(postId);
+    setDeleteModalState({ isOpen: true, postId });
+  };
+
+  const confirmDelete = () => {
+    if (deleteModalState.postId) {
+      deletePost.mutate(deleteModalState.postId, {
+        onSuccess: () => {
+          setDeleteModalState({ isOpen: false, postId: null });
+          toast.success('Post deleted successfully');
+        },
+      });
     }
+  };
+
+  const cancelDelete = () => {
+    setDeleteModalState({ isOpen: false, postId: null });
   };
 
   const breadcrumbItems = [
@@ -102,7 +124,7 @@ export function UserPostsPage() {
       </div>
 
       {/* Scrollable Posts Section */}
-      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto min-h-0">
+      <div ref={scrollContainerRef} className="flex-1 overflow-y-auto min-h-0 -mr-2 pr-2">
         <div className="pb-12">
           <div className="flex flex-wrap gap-card-gap">
             <div ref={newPostCardRef}>
@@ -124,7 +146,7 @@ export function UserPostsPage() {
       {showFloatingButton && (
         <button
           onClick={() => setIsModalOpen(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center z-40"
+          className="fixed bottom-6 right-6 w-14 h-14 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all flex items-center justify-center z-40 cursor-pointer"
           aria-label="New Post"
         >
           <svg
@@ -144,12 +166,24 @@ export function UserPostsPage() {
         </button>
       )}
 
-      <NewPostModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleCreatePost}
-        isLoading={createPost.isPending}
-        error={createPost.error}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} maxWidth="2xl">
+        <h2 className="text-3xl font-bold text-slate-950 mb-6">New post</h2>
+        <Suspense fallback={<div className="flex justify-center py-8"><LoadingSpinner /></div>}>
+          <PostForm
+            onSubmit={handleCreatePost}
+            onCancel={() => setIsModalOpen(false)}
+            isLoading={createPost.isPending}
+            error={createPost.error}
+            shouldReset={!isModalOpen}
+          />
+        </Suspense>
+      </Modal>
+
+      <DeleteConfirmModal
+        isOpen={deleteModalState.isOpen}
+        onClose={cancelDelete}
+        onConfirm={confirmDelete}
+        isLoading={deletePost.isPending}
       />
     </div>
   );

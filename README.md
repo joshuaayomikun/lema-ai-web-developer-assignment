@@ -38,7 +38,7 @@ pnpm dev
 
 **Option 2: Run servers separately**
 
-In one terminal (Backend - http://localhost:3001):
+In one terminal (Backend - http://localhost:3000):
 ```bash
 pnpm backend:dev
 ```

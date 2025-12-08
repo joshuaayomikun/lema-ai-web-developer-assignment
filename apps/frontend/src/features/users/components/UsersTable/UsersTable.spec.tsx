@@ -65,7 +65,7 @@ describe('UsersTable', () => {
 
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('john@example.com')).toBeInTheDocument();
-    expect(screen.getByText('123 Main St, NY, New York, 10001')).toBeInTheDocument();
+    expect(screen.getByText('123 Main St, New York, NY 10001')).toBeInTheDocument();
 
     expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     expect(screen.getByText('jane@example.com')).toBeInTheDocument();

@@ -61,13 +61,14 @@ describe('PostCard', () => {
     expect(bodyElement).toHaveClass('line-clamp-6');
   });
 
-  it('should have fixed dimensions for card', () => {
+  it('should have responsive dimensions for card', () => {
     const { container } = render(
       <PostCard post={mockPost} onDelete={mockOnDelete} />
     );
 
     const card = container.firstChild as HTMLElement;
-    expect(card).toHaveClass('w-(--width-card)');
-    expect(card).toHaveClass('h-(--height-card)');
+    // Full width on mobile, fixed width on larger screens
+    expect(card).toHaveClass('w-full');
+    expect(card).toHaveClass('sm:w-card');
   });
 });

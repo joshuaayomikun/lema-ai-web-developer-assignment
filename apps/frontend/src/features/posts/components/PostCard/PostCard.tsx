@@ -7,7 +7,7 @@ interface PostCardProps {
 
 export function PostCard({ post, onDelete }: PostCardProps) {
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white relative w-(--width-card) h-(--height-card) flex flex-col shadow-(--shadow-card)">
+    <div className="border border-slate-200 rounded-lg p-4 bg-white relative w-full sm:w-card h-card flex flex-col shadow-(--shadow-card) animate-fade-in">
       <button
         onClick={() => onDelete(post.id)}
         className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
@@ -29,11 +29,11 @@ export function PostCard({ post, onDelete }: PostCardProps) {
         </svg>
       </button>
 
-      <h3 className="text-base font-semibold text-gray-900 mb-2 pr-6">
+      <h3 className="text-base font-semibold text-gray-900 mb-2 pr-6 line-clamp-2" title={post.title}>
         {post.title}
       </h3>
 
-      <p className="text-sm text-gray-600 leading-relaxed line-clamp-6 flex-1">
+      <p className="text-sm text-gray-600 leading-relaxed line-clamp-6">
         {post.body}
       </p>
     </div>

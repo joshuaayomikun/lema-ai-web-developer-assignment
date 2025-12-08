@@ -1,8 +1,10 @@
 import { StrictMode } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import * as ReactDOM from 'react-dom/client';
+import { ErrorBoundary } from '@web-developer-assignment/ui';
 import App from './app/app';
 
 const queryClient = new QueryClient({
@@ -21,11 +23,14 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} />
+        <Toaster position="top-right" />
+      </QueryClientProvider>
+    </ErrorBoundary>
   </StrictMode>
 );

@@ -45,22 +45,26 @@ export function UsersPage() {
   }
 
   return (
-    <div className="py-12">
-      <h1 className="text-4xl font-bold text-gray-900 mb-8">Users</h1>
+    <div className="py-12 flex flex-col items-center justify-center min-h-screen">
+      <div className="w-full">
+        <h1 className="text-4xl font-bold text-gray-900 mb-8">Users</h1>
 
-      <UsersTable
-        users={usersData || []}
-        onUserClick={handleUserClick}
-        isLoading={isLoadingUsers}
-      />
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+        <UsersTable
+          users={usersData || []}
+          onUserClick={handleUserClick}
+          isLoading={isLoadingUsers}
         />
-      )}
+
+        {totalPages > 1 && (
+          <div className="flex justify-end">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

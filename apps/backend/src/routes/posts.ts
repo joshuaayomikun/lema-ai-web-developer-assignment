@@ -9,8 +9,12 @@ router.get("/", async (req: Request, res: Response) => {
     res.status(400).send({ error: "userId is required" });
     return;
   }
-  const posts = await getPosts(userId);
-  res.send(posts);
+  try {
+    const posts = await getPosts(userId);
+    res.send(posts);
+  } catch (error) {
+    res.status(500).send({ error: "Failed to fetch posts" });
+  }
 });
 
 router.post("/", async (req: Request, res: Response) => {
