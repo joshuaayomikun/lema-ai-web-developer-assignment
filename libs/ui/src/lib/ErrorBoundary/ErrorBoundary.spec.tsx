@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { ErrorBoundary } from './ErrorBoundary';
 
 // Component that throws an error
@@ -74,7 +75,8 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Go home')).toBeInTheDocument();
   });
 
-  it('should reset error state when Try again is clicked', () => {
+  it('should reset error state when Try again is clicked', async () => {
+    const user = userEvent.setup();
     render(
       <ErrorBoundary>
         <ThrowError shouldThrow={true} />
@@ -84,7 +86,7 @@ describe('ErrorBoundary', () => {
     expect(screen.getByText('Something went wrong')).toBeInTheDocument();
 
     // Click Try again - this resets the error state
-    fireEvent.click(screen.getByText('Try again'));
+    await user.click(screen.getByText('Try again'));
 
     // After reset, the component tries to render children again
     // Since ThrowError still throws, it will show error again

@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach, afterEach, Mock } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { UserPostsPage } from './UserPostsPage';
@@ -242,9 +243,10 @@ describe('UserPostsPage', () => {
 
   describe('Create Post Modal', () => {
     it('should open modal when new post card is clicked', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('new-post-card'));
+      await user.click(screen.getByTestId('new-post-card'));
 
       await waitFor(() => {
         expect(screen.getByTestId('modal')).toBeInTheDocument();
@@ -252,9 +254,10 @@ describe('UserPostsPage', () => {
     });
 
     it('should display modal title', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('new-post-card'));
+      await user.click(screen.getByTestId('new-post-card'));
 
       await waitFor(() => {
         expect(screen.getByText('New post')).toBeInTheDocument();
@@ -262,15 +265,16 @@ describe('UserPostsPage', () => {
     });
 
     it('should close modal when close button is clicked', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('new-post-card'));
+      await user.click(screen.getByTestId('new-post-card'));
 
       await waitFor(() => {
         expect(screen.getByTestId('modal')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByTestId('close-modal'));
+      await user.click(screen.getByTestId('close-modal'));
 
       await waitFor(() => {
         expect(screen.queryByTestId('modal')).not.toBeInTheDocument();
@@ -278,15 +282,16 @@ describe('UserPostsPage', () => {
     });
 
     it('should call createPost.mutate when form is submitted', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('new-post-card'));
+      await user.click(screen.getByTestId('new-post-card'));
 
       await waitFor(() => {
         expect(screen.getByTestId('post-form')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Submit'));
+      await user.click(screen.getByText('Submit'));
 
       expect(mockMutate).toHaveBeenCalledWith(
         { title: 'Test', body: 'Content', userId: 'user1' },
@@ -297,9 +302,10 @@ describe('UserPostsPage', () => {
 
   describe('Delete Post', () => {
     it('should open delete modal when delete button is clicked', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('delete-post1'));
+      await user.click(screen.getByTestId('delete-post1'));
 
       await waitFor(() => {
         expect(screen.getByTestId('delete-modal')).toBeInTheDocument();
@@ -307,15 +313,16 @@ describe('UserPostsPage', () => {
     });
 
     it('should close delete modal when cancel is clicked', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('delete-post1'));
+      await user.click(screen.getByTestId('delete-post1'));
 
       await waitFor(() => {
         expect(screen.getByTestId('delete-modal')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Cancel'));
+      await user.click(screen.getByText('Cancel'));
 
       await waitFor(() => {
         expect(screen.queryByTestId('delete-modal')).not.toBeInTheDocument();
@@ -323,15 +330,16 @@ describe('UserPostsPage', () => {
     });
 
     it('should call deletePost.mutate when confirm is clicked', async () => {
+      const user = userEvent.setup();
       renderWithRouter();
 
-      fireEvent.click(screen.getByTestId('delete-post1'));
+      await user.click(screen.getByTestId('delete-post1'));
 
       await waitFor(() => {
         expect(screen.getByTestId('delete-modal')).toBeInTheDocument();
       });
 
-      fireEvent.click(screen.getByText('Confirm Delete'));
+      await user.click(screen.getByText('Confirm Delete'));
 
       expect(mockDeleteMutate).toHaveBeenCalledWith(
         'post1',

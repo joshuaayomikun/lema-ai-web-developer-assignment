@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { Button } from './Button';
 
 describe('Button', () => {
@@ -111,29 +112,32 @@ describe('Button', () => {
   });
 
   describe('Click Handling', () => {
-    it('should call onClick when clicked', () => {
+    it('should call onClick when clicked', async () => {
+      const user = userEvent.setup();
       const handleClick = vi.fn();
       render(<Button onClick={handleClick}>Click me</Button>);
       
-      fireEvent.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('button'));
       
       expect(handleClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call onClick when disabled', () => {
+    it('should not call onClick when disabled', async () => {
+      const user = userEvent.setup();
       const handleClick = vi.fn();
       render(<Button onClick={handleClick} disabled>Click me</Button>);
       
-      fireEvent.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('button'));
       
       expect(handleClick).not.toHaveBeenCalled();
     });
 
-    it('should not call onClick when loading', () => {
+    it('should not call onClick when loading', async () => {
+      const user = userEvent.setup();
       const handleClick = vi.fn();
       render(<Button onClick={handleClick} isLoading>Click me</Button>);
       
-      fireEvent.click(screen.getByRole('button'));
+      await user.click(screen.getByRole('button'));
       
       expect(handleClick).not.toHaveBeenCalled();
     });

@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { UsersTable } from './UsersTable';
 import { User } from '../../types';
 
@@ -71,7 +72,8 @@ describe('UsersTable', () => {
     expect(screen.getByText('jane@example.com')).toBeInTheDocument();
   });
 
-  it('should call onUserClick when a row is clicked', () => {
+  it('should call onUserClick when a row is clicked', async () => {
+    const user = userEvent.setup();
     render(
       <UsersTable
         users={mockUsers}
@@ -83,7 +85,7 @@ describe('UsersTable', () => {
     const row = screen.getByText('John Doe').closest('tr');
     expect(row).toBeInTheDocument();
     
-    fireEvent.click(row!);
+    await user.click(row!);
     
     expect(mockOnUserClick).toHaveBeenCalledWith(mockUsers[0]);
   });

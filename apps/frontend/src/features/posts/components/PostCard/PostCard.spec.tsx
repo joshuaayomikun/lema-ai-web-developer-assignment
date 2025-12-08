@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { PostCard } from './PostCard';
 import { Post } from '../../types';
 
@@ -40,11 +41,12 @@ describe('PostCard', () => {
     expect(deleteButton).toBeInTheDocument();
   });
 
-  it('should call onDelete with post id when delete button is clicked', () => {
+  it('should call onDelete with post id when delete button is clicked', async () => {
+    const user = userEvent.setup();
     render(<PostCard post={mockPost} onDelete={mockOnDelete} />);
 
     const deleteButton = screen.getByRole('button', { name: /delete post/i });
-    fireEvent.click(deleteButton);
+    await user.click(deleteButton);
 
     expect(mockOnDelete).toHaveBeenCalledWith('1');
   });
@@ -58,7 +60,20 @@ describe('PostCard', () => {
     render(<PostCard post={longPost} onDelete={mockOnDelete} />);
 
     const bodyElement = screen.getByText('A'.repeat(500));
-    expect(bodyElement).toHaveClass('line-clamp-6');
+    // Should have one of our custom line-clamp classes (7-12)
+    const hasLineClamp = ['line-clamp-7', 'line-clamp-8', 'line-clamp-9', 'line-clamp-10', 'line-clamp-11', 'line-clamp-12']
+      .some(className => bodyElement.className.includes(className));
+    expect(hasLineClamp).toBe(true);
+  });
+
+  it('should apply text-pretty for better text wrapping', () => {
+    render(<PostCard post={mockPost} onDelete={mockOnDelete} />);
+
+    const titleElement = screen.getByText('Test Post Title');
+    const bodyElement = screen.getByText('This is the body of the test post. It contains some sample content.');
+    
+    expect(titleElement).toHaveClass('text-pretty');
+    expect(bodyElement).toHaveClass('text-pretty');
   });
 
   it('should have responsive dimensions for card', () => {
@@ -70,5 +85,13 @@ describe('PostCard', () => {
     // Full width on mobile, fixed width on larger screens
     expect(card).toHaveClass('w-full');
     expect(card).toHaveClass('sm:w-card');
+    expect(card).toHaveClass('h-card');
+  });
+
+  it('should have flex-1 on body text for proper height filling', () => {
+    render(<PostCard post={mockPost} onDelete={mockOnDelete} />);
+
+    const bodyElement = screen.getByText('This is the body of the test post. It contains some sample content.');
+    expect(bodyElement).toHaveClass('flex-1');
   });
 });

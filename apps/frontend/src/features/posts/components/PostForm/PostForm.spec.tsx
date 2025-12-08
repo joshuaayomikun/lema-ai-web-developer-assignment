@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { PostForm } from './PostForm';
 
@@ -154,18 +155,20 @@ describe('PostForm', () => {
   });
 
   describe('Cancel Button', () => {
-    it('should call onCancel when Cancel button is clicked', () => {
+    it('should call onCancel when Cancel button is clicked', async () => {
+      const user = userEvent.setup();
       render(<PostForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} />);
 
-      fireEvent.click(screen.getByText('Cancel'));
+      await user.click(screen.getByText('Cancel'));
 
       expect(mockOnCancel).toHaveBeenCalledTimes(1);
     });
 
-    it('should not call onCancel when Cancel is disabled and clicked', () => {
+    it('should not call onCancel when Cancel is disabled and clicked', async () => {
+      const user = userEvent.setup();
       render(<PostForm onSubmit={mockOnSubmit} onCancel={mockOnCancel} isLoading={true} />);
 
-      fireEvent.click(screen.getByText('Cancel'));
+      await user.click(screen.getByText('Cancel'));
 
       // Button is disabled, so click should not trigger callback
       // Note: In real DOM, disabled buttons don't fire click events

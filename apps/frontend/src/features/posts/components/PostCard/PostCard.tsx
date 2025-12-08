@@ -1,4 +1,5 @@
 import { Post } from '../../types';
+import { useEffect, useRef, useState } from 'react';
 
 interface PostCardProps {
   post: Post;
@@ -6,8 +7,33 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, onDelete }: PostCardProps) {
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [lineClamp, setLineClamp] = useState(10);
+
+  useEffect(() => {
+    if (titleRef.current && containerRef.current) {
+      const titleHeight = titleRef.current.offsetHeight;
+      const containerHeight = containerRef.current.offsetHeight;
+      const padding = 16; // p-4 = 16px top + 16px bottom
+      const titleMargin = 8; // mb-2 = 8px
+      
+      // Available height for content
+      const availableHeight = containerHeight - padding - titleHeight - titleMargin;
+      
+      // Calculate line height (leading-relaxed = 1.625, text-sm = 14px)
+      const lineHeight = 14 * 1.625; // ≈ 22.75px
+      
+      // Calculate number of lines that fit
+      const calculatedLines = Math.floor(availableHeight / lineHeight);
+      
+      // Clamp between 7 and 12 (our custom Tailwind utilities)
+      setLineClamp(Math.max(7, Math.min(12, calculatedLines)));
+    }
+  }, [post.title]);
+
   return (
-    <div className="border border-slate-200 rounded-lg p-4 bg-white relative w-full sm:w-card h-card flex flex-col shadow-(--shadow-card) animate-fade-in">
+    <div ref={containerRef} className="border border-slate-200 rounded-lg p-4 bg-white relative w-full sm:w-card h-card flex flex-col shadow-(--shadow-card) animate-fade-in">
       <button
         onClick={() => onDelete(post.id)}
         className="absolute top-3 right-3 text-gray-400 hover:text-red-500 transition-colors cursor-pointer"
@@ -29,11 +55,13 @@ export function PostCard({ post, onDelete }: PostCardProps) {
         </svg>
       </button>
 
-      <h3 className="text-base font-semibold text-gray-900 mb-2 pr-6 line-clamp-2" title={post.title}>
+      <h3 ref={titleRef} className="text-base font-semibold text-gray-900 mb-2 pr-6 line-clamp-2 text-pretty" title={post.title}>
         {post.title}
       </h3>
 
-      <p className="text-sm text-gray-600 leading-relaxed line-clamp-6">
+      <p 
+        className={`text-sm text-gray-600 leading-relaxed flex-1 text-pretty line-clamp-${lineClamp}`}
+      >
         {post.body}
       </p>
     </div>

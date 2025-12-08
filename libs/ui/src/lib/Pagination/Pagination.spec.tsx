@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { Pagination } from './Pagination';
 
 describe('Pagination', () => {
@@ -62,7 +63,8 @@ describe('Pagination', () => {
     expect(nextButton).toBeDisabled();
   });
 
-  it('should call onPageChange when clicking a page number', () => {
+  it('should call onPageChange when clicking a page number', async () => {
+    const user = userEvent.setup();
     render(
       <Pagination
         currentPage={1}
@@ -71,11 +73,12 @@ describe('Pagination', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('3'));
+    await user.click(screen.getByText('3'));
     expect(mockOnPageChange).toHaveBeenCalledWith(3);
   });
 
-  it('should call onPageChange with previous page when clicking Previous', () => {
+  it('should call onPageChange with previous page when clicking Previous', async () => {
+    const user = userEvent.setup();
     render(
       <Pagination
         currentPage={3}
@@ -84,11 +87,12 @@ describe('Pagination', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Previous'));
+    await user.click(screen.getByText('Previous'));
     expect(mockOnPageChange).toHaveBeenCalledWith(2);
   });
 
-  it('should call onPageChange with next page when clicking Next', () => {
+  it('should call onPageChange with next page when clicking Next', async () => {
+    const user = userEvent.setup();
     render(
       <Pagination
         currentPage={3}
@@ -97,7 +101,7 @@ describe('Pagination', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Next'));
+    await user.click(screen.getByText('Next'));
     expect(mockOnPageChange).toHaveBeenCalledWith(4);
   });
 

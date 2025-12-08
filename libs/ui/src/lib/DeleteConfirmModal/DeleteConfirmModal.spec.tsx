@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
 
 describe('DeleteConfirmModal', () => {
@@ -65,7 +66,8 @@ describe('DeleteConfirmModal', () => {
     expect(screen.getByText('Delete')).toBeInTheDocument();
   });
 
-  it('should call onClose when clicking Cancel button', () => {
+  it('should call onClose when clicking Cancel button', async () => {
+    const user = userEvent.setup();
     render(
       <DeleteConfirmModal
         isOpen={true}
@@ -74,13 +76,14 @@ describe('DeleteConfirmModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Cancel'));
+    await user.click(screen.getByText('Cancel'));
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
     expect(mockOnConfirm).not.toHaveBeenCalled();
   });
 
-  it('should call onConfirm when clicking Delete button', () => {
+  it('should call onConfirm when clicking Delete button', async () => {
+    const user = userEvent.setup();
     render(
       <DeleteConfirmModal
         isOpen={true}
@@ -89,7 +92,7 @@ describe('DeleteConfirmModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByText('Delete'));
+    await user.click(screen.getByText('Delete'));
 
     expect(mockOnConfirm).toHaveBeenCalledTimes(1);
     expect(mockOnClose).not.toHaveBeenCalled();
@@ -126,7 +129,8 @@ describe('DeleteConfirmModal', () => {
     expect(screen.getByText('Deleting...')).toBeInTheDocument();
   });
 
-  it('should call onClose when clicking backdrop', () => {
+  it('should call onClose when clicking backdrop', async () => {
+    const user = userEvent.setup();
     render(
       <DeleteConfirmModal
         isOpen={true}
@@ -136,12 +140,13 @@ describe('DeleteConfirmModal', () => {
     );
 
     const backdrop = document.querySelector('.bg-black\\/50');
-    fireEvent.click(backdrop!);
+    await user.click(backdrop!);
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should not close on backdrop click when isLoading is true', () => {
+  it('should not close on backdrop click when isLoading is true', async () => {
+    const user = userEvent.setup();
     render(
       <DeleteConfirmModal
         isOpen={true}
@@ -152,7 +157,7 @@ describe('DeleteConfirmModal', () => {
     );
 
     const backdrop = document.querySelector('.bg-black\\/50');
-    fireEvent.click(backdrop!);
+    await user.click(backdrop!);
 
     expect(mockOnClose).not.toHaveBeenCalled();
   });

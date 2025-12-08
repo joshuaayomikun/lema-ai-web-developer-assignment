@@ -6,7 +6,7 @@ export function NewPostCard({ onClick }: NewPostCardProps) {
   return (
     <button
       onClick={onClick}
-      className="w-full sm:w-card h-32 sm:h-card border border-dashed border-slate-200 rounded-lg p-4 bg-white flex flex-col items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer"
+      className="w-full h-full border border-dashed border-slate-200 rounded-lg p-4 bg-white flex flex-col items-center justify-center hover:border-gray-400 hover:bg-gray-50 transition-colors cursor-pointer"
     >
       <div className="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center mb-2">
         <svg

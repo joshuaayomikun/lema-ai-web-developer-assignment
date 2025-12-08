@@ -1,5 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import { Modal } from './Modal';
 
 describe('Modal', () => {
@@ -29,7 +30,8 @@ describe('Modal', () => {
     expect(screen.getByText('Modal content')).toBeInTheDocument();
   });
 
-  it('should call onClose when clicking backdrop', () => {
+  it('should call onClose when clicking backdrop', async () => {
+    const user = userEvent.setup();
     render(
       <Modal isOpen={true} onClose={mockOnClose}>
         <p>Modal content</p>
@@ -38,12 +40,13 @@ describe('Modal', () => {
 
     // Click the backdrop (the first div with bg-black/50 class)
     const backdrop = document.querySelector('.bg-black\\/50');
-    fireEvent.click(backdrop!);
+    await user.click(backdrop!);
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('should not call onClose when clicking backdrop if closeOnBackdropClick is false', () => {
+  it('should not call onClose when clicking backdrop if closeOnBackdropClick is false', async () => {
+    const user = userEvent.setup();
     render(
       <Modal isOpen={true} onClose={mockOnClose} closeOnBackdropClick={false}>
         <p>Modal content</p>
@@ -51,19 +54,20 @@ describe('Modal', () => {
     );
 
     const backdrop = document.querySelector('.bg-black\\/50');
-    fireEvent.click(backdrop!);
+    await user.click(backdrop!);
 
     expect(mockOnClose).not.toHaveBeenCalled();
   });
 
-  it('should not call onClose when clicking modal content', () => {
+  it('should not call onClose when clicking modal content', async () => {
+    const user = userEvent.setup();
     render(
       <Modal isOpen={true} onClose={mockOnClose}>
         <p>Modal content</p>
       </Modal>
     );
 
-    fireEvent.click(screen.getByText('Modal content'));
+    await user.click(screen.getByText('Modal content'));
 
     expect(mockOnClose).not.toHaveBeenCalled();
   });

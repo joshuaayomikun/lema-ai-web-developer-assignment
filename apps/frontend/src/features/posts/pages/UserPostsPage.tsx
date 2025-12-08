@@ -127,7 +127,7 @@ export function UserPostsPage() {
       <div ref={scrollContainerRef} className="flex-1 overflow-y-auto min-h-0 -mr-2 pr-2">
         <div className="pb-12">
           <div className="flex flex-wrap gap-card-gap">
-            <div ref={newPostCardRef}>
+            <div ref={newPostCardRef} className="w-full sm:w-card h-card shrink-0">
               <NewPostCard onClick={() => setIsModalOpen(true)} />
             </div>
 
