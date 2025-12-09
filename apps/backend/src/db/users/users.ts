@@ -7,19 +7,27 @@ import {
 } from "./query-templates";
 import { UserWithDetails, UserRow } from "./types";
 
-const mapRowToUser = (row: UserRow): UserWithDetails => ({
-  id: row.id,
-  name: row.name,
-  username: row.username,
-  email: row.email,
-  phone: row.phone,
-  address: {
-    street: row.street || '',
-    city: row.city || '',
-    state: row.state || '',
-    zipcode: row.zipcode || '',
-  },
-});
+const mapRowToUser = (row: UserRow): UserWithDetails => {
+  const street = row.street || '';
+  const city = row.city || '';
+  const state = row.state || '';
+  const zipcode = row.zipcode || '';
+  
+  return {
+    id: row.id,
+    name: row.name,
+    username: row.username,
+    email: row.email,
+    phone: row.phone,
+    address: {
+      street,
+      city,
+      state,
+      zipcode,
+      formatted: `${street}, ${city}, ${state} ${zipcode}`,
+    },
+  };
+};
 
 export const getUsersCount = (): Promise<number> =>
   new Promise((resolve, reject) => {

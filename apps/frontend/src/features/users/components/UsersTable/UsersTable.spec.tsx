@@ -20,6 +20,7 @@ describe('UsersTable', () => {
         city: 'New York',
         state: 'NY',
         zipcode: '10001',
+        formatted: '123 Main St, New York, NY 10001',
       },
     },
     {
@@ -31,6 +32,7 @@ describe('UsersTable', () => {
         city: 'Los Angeles',
         state: 'CA',
         zipcode: '90001',
+        formatted: '456 Oak Ave, Los Angeles, CA 90001',
       },
     },
   ];

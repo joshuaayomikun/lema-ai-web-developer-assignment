@@ -45,7 +45,7 @@ describe('Users Routes', () => {
           username: 'johndoe',
           email: 'john@example.com',
           phone: '123-456-7890',
-          address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001' },
+          address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001', formatted: '123 Main St, NYC, NY 10001' },
         },
         {
           id: '2',
@@ -53,7 +53,7 @@ describe('Users Routes', () => {
           username: 'janedoe',
           email: 'jane@example.com',
           phone: '098-765-4321',
-          address: { street: '456 Oak Ave', city: 'LA', state: 'CA', zipcode: '90001' },
+          address: { street: '456 Oak Ave', city: 'LA', state: 'CA', zipcode: '90001', formatted: '456 Oak Ave, LA, CA 90001' },
         },
       ];
 
@@ -74,7 +74,7 @@ describe('Users Routes', () => {
           username: 'bobsmith',
           email: 'bob@example.com',
           phone: '555-555-5555',
-          address: { street: '789 Pine Rd', city: 'Chicago', state: 'IL', zipcode: '60601' },
+          address: { street: '789 Pine Rd', city: 'Chicago', state: 'IL', zipcode: '60601', formatted: '789 Pine Rd, Chicago, IL 60601' },
         },
       ];
 
@@ -102,7 +102,7 @@ describe('Users Routes', () => {
           username: 'johndoe',
           email: 'john@example.com',
           phone: '123-456-7890',
-          address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001' },
+          address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001', formatted: '123 Main St, NYC, NY 10001' },
         },
       ];
 
@@ -136,7 +136,7 @@ describe('Users Routes', () => {
         username: 'johndoe',
         email: 'john@example.com',
         phone: '123-456-7890',
-        address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001' },
+        address: { street: '123 Main St', city: 'NYC', state: 'NY', zipcode: '10001', formatted: '123 Main St, NYC, NY 10001' },
       };
 
       vi.mocked(getUserById).mockResolvedValue(mockUser);

@@ -8,11 +8,6 @@ interface UsersTableProps {
 }
 
 export function UsersTable({ users, onUserClick, isLoading }: UsersTableProps) {
-  const formatAddress = (address: User['address']) => {
-    if (!address) return '';
-    return `${address.street}, ${address.city}, ${address.state} ${address.zipcode}`;
-  };
-
   return (
     <div className="w-full border border-slate-200 rounded-lg overflow-x-auto">
       <table className="w-full min-w-[600px]">
@@ -48,7 +43,7 @@ export function UsersTable({ users, onUserClick, isLoading }: UsersTableProps) {
                 <td className="py-4 px-4 text-sm text-gray-900 whitespace-nowrap">{user.name}</td>
                 <td className="py-4 px-4 text-sm text-gray-900 whitespace-nowrap">{user.email}</td>
                 <td className="py-4 px-4 text-sm text-gray-900 w-table-column max-w-[392px] truncate">
-                  {formatAddress(user.address)}
+                  {user.address?.formatted || ''}
                 </td>
               </tr>
             ))

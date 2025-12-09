@@ -3,6 +3,7 @@ export interface Address {
   city: string;
   state: string;
   zipcode: string;
+  formatted: string;
 }
 
 export interface User {
